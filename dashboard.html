@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#031612">
+    <meta name="description" content="Your personal SignBridge dashboard for Indian Sign Language detection, text conversion, speech output, and learning.">
+
+    <title>Dashboard | SignBridge</title>
+
+    <!-- Existing shared styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Dashboard-specific styles -->
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <!-- Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <script src="js/dashboard.js" defer></script>
+</head>
+
+<body class="dashboard-page">
+
+    <div class="dashboard-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <a href="index.html" class="brand">
+                <span class="brand-icon">
+                    <i class="fa-solid fa-hand"></i>
+                </span>
+
+                <span>SignBridge</span>
+            </a>
+
+            <div class="sidebar-caption">WORKSPACE</div>
+
+            <nav class="sidebar-nav" aria-label="Dashboard navigation">
+
+                <a href="#welcome" class="sidebar-link active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="#detection" class="sidebar-link">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>ISL Detection</span>
+                </a>
+
+                <a href="#text-conversion" class="sidebar-link">
+                    <i class="fa-solid fa-align-left"></i>
+                    <span>Text Conversion</span>
+                </a>
+
+                <a href="#speech-output" class="sidebar-link">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span>Speech Output</span>
+                </a>
+
+                <a href="#learning-library" class="sidebar-link">
+    <i class="fa-solid fa-book-open"></i>
+    <span>Learning Hub</span>
+</a>
+
+                <a href="#recent-activity" class="sidebar-link">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>Recent Activity</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-caption">PREFERENCES</div>
+
+            <nav class="sidebar-nav" aria-label="Preferences">
+
+                <a href="#settings" class="sidebar-link" id="settingsLink">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+
+                <a href="index.html" class="sidebar-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Back to Home</span>
+                </a>
+
+            </nav>
+
+
+            <!-- Decorative inclusion card -->
+
+            <div class="sidebar-promo">
+
+                <div class="promo-art">
+                    <i class="fa-solid fa-hand-sparkles"></i>
+                    <span class="promo-spark spark-one">✦</span>
+                    <span class="promo-spark spark-two">✧</span>
+                </div>
+
+                <p class="promo-title">More than technology.</p>
+                <p class="promo-subtitle">A bridge between people.</p>
+
+                <div class="promo-decoration">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+            </div>
+
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span>SignBridge Workspace</span>
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN AREA ================= -->
+
+        <main class="dashboard-main">
+
+            <!-- TOP BAR -->
+
+            <header class="dashboard-topbar">
+
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Open navigation"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="topbar-context">
+                    <span class="context-label">YOUR WORKSPACE</span>
+                    <span class="context-divider">/</span>
+                    <span class="context-current">Dashboard</span>
+                </div>
+
+                <div class="topbar-actions">
+
+                    <button
+                        class="icon-button"
+                        id="notificationButton"
+                        type="button"
+                        aria-label="Notifications"
+                    >
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <div class="profile-wrapper">
+
+                        <button
+                            class="profile-button"
+                            id="profileButton"
+                            type="button"
+                            aria-expanded="false"
+                        >
+                            <span class="profile-avatar" id="profileAvatar">E</span>
+
+                            <span class="profile-details">
+                                <span class="profile-name" id="profileName">Eliza</span>
+                                <span class="profile-role">Personal workspace</span>
+                            </span>
+
+                            <i class="fa-solid fa-chevron-down profile-chevron"></i>
+                        </button>
+
+                        <div class="profile-dropdown" id="profileDropdown" hidden>
+                            <button type="button" id="editProfileButton">
+                                <i class="fa-regular fa-user"></i>
+                                Edit display name
+                            </button>
+
+                            <a href="#settings">
+                                <i class="fa-solid fa-gear"></i>
+                                Settings
+                            </a>
+
+                            <a href="index.html">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                Back to Home
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- DASHBOARD CONTENT -->
+
+            <div class="dashboard-content">
+
+
+                <!-- WELCOME SECTION -->
+
+                <section class="welcome-section" id="welcome">
+
+                    <div class="welcome-copy">
+
+                        <div class="eyebrow">
+                            <span class="eyebrow-line"></span>
+                            YOUR SPACE TO CONNECT
+                        </div>
+
+                        <h1>
+                            Welcome back,
+                            <span id="welcomeName">Arshi</span><span class="heading-period">.</span>
+                        </h1>
+
+                        <p>
+                            Every gesture tells a story.
+                            Let's make communication more accessible, one sign at a time.
+                        </p>
+
+                        <div class="welcome-actions">
+
+                            <a href="#detection" class="primary-button">
+                                <i class="fa-solid fa-camera"></i>
+                                Explore Detection
+                                <i class="fa-solid fa-arrow-right button-arrow"></i>
+                            </a>
+
+                            <a href="#learning-library" class="secondary-button">
+                                <i class="fa-solid fa-book-open"></i>
+                                Explore ISL
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="welcome-art" aria-hidden="true">
+
+                        <div class="art-orbit orbit-one"></div>
+                        <div class="art-orbit orbit-two"></div>
+
+                        <div class="art-center">
+                            <i class="fa-solid fa-hand-sparkles"></i>
+                        </div>
+
+                        <span class="art-star star-one">✦</span>
+                        <span class="art-star star-two">✧</span>
+                        <span class="art-star star-three">✦</span>
+
+                        <div class="art-message">
+                            <span class="art-message-icon">
+                                <i class="fa-solid fa-heart"></i>
+                            </span>
+
+                            <span>
+                                <strong>Communication for everyone</strong>
+                                <small>Small gestures. Big conversations.</small>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- SECTION HEADING -->
+
+                <section class="features-section" id="features">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <span class="section-kicker">DISCOVER SIGNBRIDGE</span>
+                            <h2>Your communication toolkit</h2>
+                            <p>Everything you need, thoughtfully brought together.</p>
+                        </div>
+
+                        <span class="feature-count">
+                            <i class="fa-solid fa-sparkles"></i>
+                            04 FEATURES
+                        </span>
+
+                    </div>
+
+
+                    <!-- FEATURE CARDS -->
+
+                    <div class="feature-grid">
+
+
+                        <!-- DETECTION -->
+
+                        <article class="feature-card detection-card" id="detection">
+
+                            <div class="feature-card-top">
+
+                                <span class="feature-icon">
+                                    <i class="fa-solid fa-camera"></i>
+                                </span>
+
+                                <span class="feature-number">01</span>
+
+                            </div>
+
+                            <div class="feature-illustration hand-illustration" aria-hidden="true">
+                                <span class="illustration-ring"></span>
+                                <i class="fa-solid fa-hand"></i>
+                                <span class="illustration-point point-one"></span>
+                                <span class="illustration-point point-two"></span>
+                                <span class="illustration-point point-three"></span>
+                                <span class="illustration-star">✦</span>
+                            </div>
+
+                            <div class="feature-card-content">
+
+                                <span class="feature-label">VISION & RECOGNITION</span>
+
+                                <h3>ISL Detection</h3>
+
+                                <p>
+                                    Use your camera to explore real-time hand tracking
+                                    and connect recognized signs with text.
+                                </p>
+
+                            </div>
+
+                            <a
+    href="detection.html"
+    class="feature-action feature-action-primary"
+>
+    Open Detection
+    <i class="fa-solid fa-arrow-right"></i>
+</a>
+</article>
+
+
+                        <!-- TEXT CONVERSION -->
+
+                        <article class="feature-card text-card" id="text-conversion">
+
+                            <div class="feature-card-top">
+
+                                <span class="feature-icon">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </span>
+
+                                <span class="feature-number">02</span>
+
+                            </div>
+
+                            <div class="feature-illustration text-illustration" aria-hidden="true">
+
+                                <div class="text-symbol">Aa</div>
+
+                                <div class="text-conversion-arrow">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </div>
+
+                                <div class="text-symbol text-symbol-result">
+                                    <i class="fa-regular fa-message"></i>
+                                </div>
+
+                                <span class="floating-letter letter-one">A</span>
+                                <span class="floating-letter letter-two">ISL</span>
+
+                            </div>
+
+                            <div class="feature-card-content">
+
+                                <span class="feature-label">WORDS & MEANING</span>
+
+                                <h3>Text Conversion</h3>
+
+                                <p>
+                                    View, edit, and copy recognized text.
+                                    Prepare your message for clear communication.
+                                </p>
+
+                            </div>
+
+                            <button
+                                class="feature-action"
+                                type="button"
+                                data-feature="text"
+                            >
+                                Open Text Studio
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </article>
+
+
+                        <!-- SPEECH OUTPUT -->
+
+                        <article class="feature-card speech-card" id="speech-output">
+
+                            <div class="feature-card-top">
+
+                                <span class="feature-icon">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </span>
+
+                                <span class="feature-number">03</span>
+
+                            </div>
+
+                            <div class="feature-illustration speech-illustration" aria-hidden="true">
+
+                                <div class="speech-orbit"></div>
+
+                                <i class="fa-solid fa-volume-high speech-main-icon"></i>
+
+                                <div class="waveform">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                            </div>
+
+                            <div class="feature-card-content">
+
+                                <span class="feature-label">TEXT TO VOICE</span>
+
+                                <h3>Speech Output</h3>
+
+                                <p>
+                                    Turn written messages into spoken words
+                                    using your browser's available voices.
+                                </p>
+
+                            </div>
+
+                            <button
+                                class="feature-action"
+                                type="button"
+                                data-feature="speech"
+                            >
+                                Try Speech
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </article>
+
+
+                        <!-- LEARNING HUB -->
+
+                        <article class="feature-card learning-card" id="learning-hub">
+
+                            <div class="feature-card-top">
+
+                                <span class="feature-icon">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </span>
+
+                                <span class="feature-number">04</span>
+
+                            </div>
+
+                            <div class="feature-illustration learning-illustration" aria-hidden="true">
+
+                                <div class="book-layer book-layer-back"></div>
+                                <div class="book-layer book-layer-middle"></div>
+
+                                <div class="book-layer book-layer-front">
+                                    <i class="fa-solid fa-book-open"></i>
+                                    <span>ISL</span>
+                                </div>
+
+                                <span class="book-star">✦</span>
+
+                            </div>
+
+                            <div class="feature-card-content">
+
+                                <span class="feature-label">LEARN & PRACTISE</span>
+
+                                <h3>Learning Hub</h3>
+
+                                <p>
+                                    Explore the ISL alphabet, everyday phrases,
+                                    and vocabulary for useful situations.
+                                </p>
+
+                            </div>
+
+                            <button
+                                class="feature-action"
+                                type="button"
+                                data-feature="learning"
+                            >
+                                Start Learning
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </article>
+
+
+                    </div>
+
+                </section>
+
+
+                <!-- LOWER DASHBOARD GRID -->
+                 
+<!-- ================= LEARNING HUB ================= -->
+
+<section class="learning-hub-section" id="learning-library">
+
+    <div class="section-heading">
+        <div>
+            <span class="section-kicker">EXPLORE INDIAN SIGN LANGUAGE</span>
+            <h2>Your ISL Learning Hub</h2>
+            <p>Learn everyday signs through short demonstration videos.</p>
+        </div>
+
+        <span class="feature-count">12 SIGN VIDEOS</span>
+    </div>
+
+    <div class="learning-toolbar">
+        <div class="learning-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+                type="search"
+                id="learningSearch"
+                placeholder="Search signs..."
+                aria-label="Search ISL signs"
+            >
+        </div>
+
+        <div class="learning-filters" id="learningFilters">
+            <button class="learning-filter active" data-category="all">All</button>
+            <button class="learning-filter" data-category="greetings">Greetings</button>
+            <button class="learning-filter" data-category="everyday">Everyday</button>
+            <button class="learning-filter" data-category="people">People</button>
+            <button class="learning-filter" data-category="emergency">Emergency</button>
+        </div>
+    </div>
+
+    <div class="learning-video-grid" id="learningVideoGrid">
+
+        <article class="learning-video-card" data-word="food" data-category="everyday">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/food.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EVERYDAY</span>
+                <h3>Food</h3>
+                <p>भोजन</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="friend" data-category="people">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/friend.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>PEOPLE</span>
+                <h3>Friend</h3>
+                <p>दोस्त</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="goodbye" data-category="greetings">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/goodbye.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>GREETINGS</span>
+                <h3>Goodbye</h3>
+                <p>अलविदा</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="hello" data-category="greetings">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/hello.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>GREETINGS</span>
+                <h3>Hello</h3>
+                <p>नमस्ते</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="help" data-category="emergency">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/help.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EMERGENCY</span>
+                <h3>Help</h3>
+                <p>मदद</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="hospital" data-category="emergency">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/hospital.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EMERGENCY</span>
+                <h3>Hospital</h3>
+                <p>अस्पताल</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="please" data-category="everyday">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/please.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EVERYDAY</span>
+                <h3>Please</h3>
+                <p>कृपया</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="sorry" data-category="everyday">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/sorry.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EVERYDAY</span>
+                <h3>Sorry</h3>
+                <p>माफ़ कीजिए</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="stop" data-category="emergency">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/stop.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EMERGENCY</span>
+                <h3>Stop</h3>
+                <p>रुकिए</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="student" data-category="people">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/student.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>PEOPLE</span>
+                <h3>Student</h3>
+                <p>विद्यार्थी</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="thank you" data-category="greetings">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/thank_you.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>GREETINGS</span>
+                <h3>Thank You</h3>
+                <p>धन्यवाद</p>
+            </div>
+        </article>
+
+        <article class="learning-video-card" data-word="water" data-category="everyday">
+            <video controls preload="metadata" playsinline>
+                <source src="isl-learn/water.mp4" type="video/mp4">
+            </video>
+            <div class="learning-video-info">
+                <span>EVERYDAY</span>
+                <h3>Water</h3>
+                <p>पानी</p>
+            </div>
+        </article>
+
+    </div>
+
+    <p class="learning-empty" id="learningEmpty" hidden>
+        No signs found. Try another search.
+    </p>
+
+</section>
+
+
+                <section class="dashboard-lower-grid">
+
+
+                    <!-- RECENT ACTIVITY -->
+
+                    <article class="panel activity-panel" id="recent-activity">
+
+                        <div class="panel-heading">
+
+                            <div class="panel-heading-icon">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+
+                            <div>
+                                <h2>Recent activity</h2>
+                                <p>Your latest interactions</p>
+                            </div>
+
+                            <button
+                                class="panel-text-button"
+                                type="button"
+                                id="clearActivityButton"
+                            >
+                                Clear
+                            </button>
+
+                        </div>
+
+
+                        <div class="activity-list" id="activityList">
+
+                            <div class="empty-activity">
+
+                                <span class="empty-activity-icon">
+                                    <i class="fa-regular fa-clock"></i>
+                                </span>
+
+                                <p>No activity yet.</p>
+
+                                <span>Your interactions will appear here.</span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- QUICK TEXT-TO-SPEECH -->
+
+                    <article class="panel quick-speech-panel" id="quick-speech">
+
+                        <div class="panel-heading">
+
+                            <div class="panel-heading-icon">
+                                <i class="fa-solid fa-wave-square"></i>
+                            </div>
+
+                            <div>
+                                <h2>Text to voice</h2>
+                                <p>Give your words a voice</p>
+                            </div>
+
+                        </div>
+
+
+                        <label class="field-label" for="speechText">
+                            YOUR MESSAGE
+                        </label>
+
+                        <textarea
+                            id="speechText"
+                            class="speech-textarea"
+                            placeholder="Type something you would like SignBridge to say..."
+                            maxlength="1000"
+                        ></textarea>
+
+
+                        <div class="speech-controls">
+
+                            <div class="speech-rate-control">
+
+                                <label for="speechRate">Speech rate</label>
+
+                                <select id="speechRate">
+                                    <option value="0.8">Slow</option>
+                                    <option value="1" selected>Normal</option>
+                                    <option value="1.2">Fast</option>
+                                </select>
+
+                            </div>
+
+                            <button
+                                class="speech-play-button"
+                                id="speakButton"
+                                type="button"
+                            >
+                                <i class="fa-solid fa-play"></i>
+                                Speak
+                            </button>
+
+                        </div>
+
+                        <button
+                            class="speech-stop-button"
+                            id="stopSpeechButton"
+                            type="button"
+                            hidden
+                        >
+                            <i class="fa-solid fa-stop"></i>
+                            Stop speaking
+                        </button>
+
+                        <p class="speech-status" id="speechStatus" aria-live="polite">
+                            Ready when you are.
+                        </p>
+
+                    </article>
+
+
+                </section>
+
+
+                <!-- INCLUSION BANNER -->
+
+                <section class="inclusion-banner">
+
+                    <div class="inclusion-symbol">
+                        <i class="fa-solid fa-hand-sparkles"></i>
+                    </div>
+
+                    <div class="inclusion-copy">
+
+                        <span class="section-kicker">OUR PURPOSE</span>
+
+                        <h2>Different ways to express. One world to understand.</h2>
+
+                        <p>
+                            SignBridge is built around the idea that communication
+                            should be more accessible, inclusive, and human.
+                        </p>
+
+                    </div>
+
+                    <span class="inclusion-star inclusion-star-one">✦</span>
+                    <span class="inclusion-star inclusion-star-two">✧</span>
+
+                </section>
+
+
+                <!-- FOOTER -->
+
+                <footer class="dashboard-footer">
+
+                    <span>
+                        © <span id="dashboardYear"></span> SignBridge.
+                        Built with care for a more inclusive world.
+                    </span>
+
+                    <a href="index.html">
+                        From signs to connection
+                        <i class="fa-regular fa-heart"></i>
+                    </a>
+
+                </footer>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- TOAST NOTIFICATION -->
+
+    <div class="dashboard-toast" id="dashboardToast" role="status" aria-live="polite">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+
+    <!-- PROFILE EDIT DIALOG -->
+
+    <dialog class="profile-dialog" id="profileDialog">
+
+        <form id="profileForm">
+
+            <div class="dialog-heading">
+
+                <div>
+                    <span class="section-kicker">PERSONALIZE YOUR SPACE</span>
+                    <h2>Display name</h2>
+                </div>
+
+                <button
+                    type="button"
+                    class="dialog-close"
+                    id="closeProfileDialog"
+                    aria-label="Close dialog"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <label for="displayNameInput">What should we call you?</label>
+
+            <input
+                type="text"
+                id="displayNameInput"
+                maxlength="40"
+                placeholder="Enter your display name"
+                required
+            >
+
+            <p class="dialog-note">
+                This name is stored in this browser only.
+                It is not a registered account.
+            </p>
+
+            <button type="submit" class="primary-button dialog-submit">
+                Save display name
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </form>
+
+    </dialog>
+
+
+    <!-- SETTINGS DIALOG -->
+
+    <dialog class="profile-dialog" id="settingsDialog">
+
+        <form id="settingsForm">
+
+            <div class="dialog-heading">
+
+                <div>
+                    <span class="section-kicker">YOUR PREFERENCES</span>
+                    <h2>Settings</h2>
+                </div>
+
+                <button
+                    type="button"
+                    class="dialog-close"
+                    id="closeSettingsDialog"
+                    aria-label="Close settings"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <label class="setting-option">
+                <span>
+                    <strong>Speech announcements</strong>
+                    <small>Allow SignBridge to speak text when you request it.</small>
+                </span>
+
+                <input type="checkbox" id="speechEnabled" checked>
+            </label>
+
+            <label class="setting-option">
+                <span>
+                    <strong>Reduce motion</strong>
+                    <small>Reduce decorative movement and animations.</small>
+                </span>
+
+                <input type="checkbox" id="reduceMotion">
+            </label>
+
+            <button type="submit" class="primary-button dialog-submit">
+                Save settings
+                <i class="fa-solid fa-check"></i>
+            </button>
+
+        </form>
+
+    </dialog>
+
+</body>
+</html>

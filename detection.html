@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ISL Detection | SignBridge</title>
+
+    <!-- Detection page styles -->
+    <link rel="stylesheet" href="css/detection.css">
+</head>
+
+<body>
+
+    <!-- Main application container -->
+    <div class="detection-page">
+
+        <!-- Header -->
+        <header class="detection-header">
+            <a href="dashboard.html" class="brand">
+                <span class="brand-icon">✋</span>
+                <span>SignBridge</span>
+            </a>
+
+            <a href="dashboard.html" class="back-button">
+                ← Back to Dashboard
+            </a>
+        </header>
+
+        <!-- Page heading -->
+        <main class="detection-main">
+
+            <section class="page-heading">
+                <p class="eyebrow">REAL-TIME COMMUNICATION</p>
+
+                <h1>ISL Detection <span>& Conversion</span></h1>
+
+                <p class="subtitle">
+                    Turn Indian Sign Language gestures into meaningful text
+                    and speech.
+                </p>
+            </section>
+
+            <!-- Main workspace -->
+            <section class="workspace">
+
+                <!-- Camera panel -->
+                <div class="panel camera-panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Live Camera</h2>
+                            <p>Position your hands inside the frame.</p>
+                        </div>
+
+                        <span class="status-badge">
+                            <span class="status-dot"></span>
+                            Ready
+                        </span>
+                    </div>
+
+                    <div class="camera-screen">
+
+                        <video id="cameraVideo"
+                               autoplay
+                               playsinline
+                               muted>
+                        </video>
+                        
+                        <canvas id="landmarkCanvas"></canvas>
+
+                        <div class="camera-placeholder" id="cameraPlaceholder">
+                            <div class="camera-icon">◎</div>
+                            <h3>Camera Preview</h3>
+                            <p>Your camera feed will appear here.</p>
+                        </div>
+
+                        <div class="camera-overlay">
+                            <span>CAM 01</span>
+                            <span id="cameraStatus">Camera inactive</span>
+                        </div>
+
+                    </div>
+
+                    <div class="camera-controls">
+                        <button id="startCamera" class="primary-button">
+                            Start Camera
+                        </button>
+
+                        <button id="stopCamera" class="secondary-button" disabled>
+                            Stop Camera
+                        </button>
+                    </div>
+
+                    <p class="camera-note" id="cameraMessage" aria-live="polite">
+                        Allow camera access when your browser asks.
+                    </p>
+
+                </div>
+
+                <!-- Recognition and conversion panel -->
+                <div class="panel output-panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Recognition Output</h2>
+                            <p>Your detected signs will appear here.</p>
+                        </div>
+
+                        <span class="ai-badge">AI WORKSPACE</span>
+                    </div>
+
+                    <div class="recognition-box">
+                        <span class="field-label">DETECTED SIGN</span>
+
+                        <p id="detectedSign" class="detected-sign">
+                            Waiting for recognition...
+                        </p>
+
+                        <p class="recognition-note">
+                            Sign recognition will be available after the
+                            ISL model is integrated.
+                        </p>
+                    </div>
+
+                    <div class="text-output">
+                        <div class="output-label-row">
+                            <label for="convertedText">CONVERTED TEXT</label>
+
+                            <span id="characterCount">0 characters</span>
+                        </div>
+
+                        <textarea
+                            id="convertedText"
+                            placeholder="Your recognized signs will form a sentence here. You can also type text manually."
+                            rows="5"
+                        ></textarea>
+
+                        <div class="text-actions">
+                            <button id="copyText" class="secondary-button">
+                                Copy Text
+                            </button>
+
+                            <button id="clearText" class="secondary-button">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="speech-section">
+                        <div>
+                            <h3>Speech Output</h3>
+                            <p>Listen to the converted text.</p>
+                        </div>
+
+                        <div class="speech-actions">
+                            <button id="speakText" class="primary-button">
+                                ▶ Speak
+                            </button>
+
+                            <button id="stopSpeech" class="secondary-button">
+                                Stop
+                            </button>
+                        </div>
+
+                        <p id="speechStatus" aria-live="polite"></p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Recognition history -->
+            <section class="panel history-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>Recent Activity</h2>
+                        <p>Your recent text and speech actions.</p>
+                    </div>
+
+                    <button id="clearHistory" class="text-button">
+                        Clear History
+                    </button>
+                </div>
+
+                <div id="historyList" class="history-list">
+                    <p class="empty-history">
+                        Your recent activity will appear here.
+                    </p>
+                </div>
+
+            </section>
+
+        </main>
+
+        <footer class="detection-footer">
+            SignBridge · Making communication more accessible.
+        </footer>
+
+    </div>
+
+    <script type="module" src="js/detection.js"></script>
+
+</body>
+</html>
