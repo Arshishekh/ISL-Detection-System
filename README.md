@@ -32,5 +32,20 @@ ISL-Detection-System/
 ├── css/                 # Stylesheets (detection.css, dashboard.css)
 ├── js/                  # Application logic & inference pipeline (detection.js)
 ├── detection.html       # Main workspace interface
+
+## 👥 Team & Project Details
+
+* **Project Title:** Indian Sign Language (ISL) Detection & Conversion System
+* **Project Type:** College Minor Project
+* **Institution:** Arka Jain University
+
+### 🌟 Team Members
+* **Kumari Isha** — *Team Leader*
+* **Arshi Shekh**
+* **Kumkum Kumari**
+* **Karan Hembrom**
+
+### 🎓 Project Mentor
+* **Kanak Lata**
 ├── dashboard.html       # User dashboard navigation
 └── README.md
