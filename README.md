@@ -17,7 +17,7 @@ An interactive web-based application designed to bridge communication gaps by tr
 
 * **Frontend:** HTML5, CSS3 (Glassmorphism & Neon UI), Vanilla JavaScript[cite: 4]
 * **AI / Machine Learning:** MediaPipe HandLandmarker, TensorFlow / Keras (`keras_model.h5`, `labels.txt`)[cite: 4]
-* **Deployment:** GitHub Pages / Netlify
+* **Deployment:** Netlify / GitHub Pages[cite: 3]
 
 ---
 
@@ -32,20 +32,5 @@ ISL-Detection-System/
 ├── css/                 # Stylesheets (detection.css, dashboard.css)
 ├── js/                  # Application logic & inference pipeline (detection.js)
 ├── detection.html       # Main workspace interface
-
-## 👥 Team & Project Details
-
-* **Project Title:** Indian Sign Language (ISL) Detection & Conversion System
-* **Project Type:** College Minor Project
-* **Institution:** Arka Jain University
-
-### 🌟 Team Members
-* **Kumari Isha** — *Team Leader*
-* **Arshi Shekh**
-* **Kumkum Kumari**
-* **Karan Hembrom**
-
-### 🎓 Project Mentor
-* **Kanak Lata**
 ├── dashboard.html       # User dashboard navigation
 └── README.md
