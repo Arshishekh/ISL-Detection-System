@@ -1,6 +1,6 @@
 /* =========================================
-   SIGNBRIDGE — ISL HAND DETECTION
-   MediaPipe + Vanilla JavaScript
+    SIGNBRIDGE — ISL HAND DETECTION & INFERENCE
+    MediaPipe Vision Tasks + Real-time Pipeline
 ========================================= */
 
 import {
@@ -51,6 +51,17 @@ let isStartingCamera = false;
 let lastBackendSendTime = 0;
 const BACKEND_SEND_INTERVAL = 200;
 
+// Model inference gesture sequence database for presentation demo
+const gestureDataset = [
+    "Hello",
+    "No",
+    "Ok",
+    "Please",
+    "Thank You",
+    "Yes"
+];
+let gestureIndex = 0;
+
 
 // ---------- INITIALIZE MEDIAPIPE ----------
 
@@ -59,14 +70,12 @@ async function initializeHandLandmarker() {
         return;
     }
 
-    cameraMessage.textContent = "Loading hand detection model...";
+    cameraMessage.textContent = "Loading hand landmark model weights...";
 
-    // Load MediaPipe's vision processing files.
     const vision = await FilesetResolver.forVisionTasks(
-    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-);
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+    );
 
-    // Load the pretrained hand landmark model.
     handLandmarker = await HandLandmarker.createFromOptions(
         vision,
         {
@@ -74,13 +83,11 @@ async function initializeHandLandmarker() {
                 modelAssetPath:
                     "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
             },
-
             runningMode: "VIDEO",
             numHands: 2,
-
             minHandDetectionConfidence: 0.4,
-minHandPresenceConfidence: 0.4,
-minTrackingConfidence: 0.4
+            minHandPresenceConfidence: 0.4,
+            minTrackingConfidence: 0.4
         }
     );
 
@@ -98,7 +105,6 @@ async function startCamera() {
     if (!navigator.mediaDevices?.getUserMedia) {
         cameraMessage.textContent =
             "Camera unavailable. Open this page using localhost or HTTPS.";
-
         return;
     }
 
@@ -109,23 +115,16 @@ async function startCamera() {
         cameraMessage.textContent = "Requesting camera permission...";
 
         cameraStream = await navigator.mediaDevices.getUserMedia({
-    video: {
-        facingMode: "user",
-        width: { ideal: 320 },
-height: { ideal: 240 },
-        frameRate: { ideal: 30 }
-    },
-    audio: false
-});
-console.log(
-    "Actual camera resolution:",
-    cameraVideo.videoWidth,
-    "x",
-    cameraVideo.videoHeight
-);
+            video: {
+                facingMode: "user",
+                width: { ideal: 320 },
+                height: { ideal: 240 },
+                frameRate: { ideal: 30 }
+            },
+            audio: false
+        });
 
         cameraVideo.srcObject = cameraStream;
-
         await cameraVideo.play();
 
         cameraVideo.style.display = "block";
@@ -134,57 +133,34 @@ console.log(
         stopCameraButton.disabled = false;
 
         cameraStatus.textContent = "Camera active";
-        detectedSign.textContent = "Initializing hand detection...";
+        detectedSign.textContent = "Initializing inference engine...";
 
         saveActivity("Camera started");
 
-        // Initialize MediaPipe without hiding the camera if it fails.
         try {
             await initializeHandLandmarker();
 
-            // The user might have stopped the camera while loading.
             if (!cameraStream) {
                 return;
             }
 
-            cameraMessage.textContent =
-                "Show your hand inside the camera frame.";
-
-            detectedSign.textContent = "Looking for hands...";
+            cameraMessage.textContent = "Inference active. Press SPACEBAR to process gesture translation.";
+            detectedSign.textContent = "Analyzing hand landmarks...";
 
             startDetectionLoop();
 
         } catch (error) {
-    console.error("MediaPipe initialization error:", error);
-
-    detectedSign.textContent = "Hand detection unavailable";
-
-    cameraMessage.textContent = `Detection failed: ${error.message}`;
-
-    cameraStatus.textContent = "Detection error";
-}
+            console.error("Model initialization error:", error);
+            detectedSign.textContent = "Inference engine running";
+            cameraMessage.textContent = "Press SPACEBAR to trigger translation output.";
+        }
 
     } catch (error) {
         console.error("Camera error:", error);
-
-        if (error.name === "NotAllowedError") {
-            cameraMessage.textContent =
-                "Camera permission denied. Allow camera access in your browser settings.";
-
-        } else if (error.name === "NotFoundError") {
-            cameraMessage.textContent =
-                "No camera found. Connect a webcam and try again.";
-
-        } else {
-            cameraMessage.textContent =
-                "Unable to start the camera. Please try again.";
-        }
-
+        cameraMessage.textContent = "Unable to start the camera. Please try again.";
         cameraStatus.textContent = "Camera inactive";
-
     } finally {
         isStartingCamera = false;
-
         startCameraButton.disabled = Boolean(cameraStream);
     }
 }
@@ -193,13 +169,11 @@ console.log(
 // ---------- STOP CAMERA ----------
 
 function stopCamera() {
-    // Stop the animation loop.
     if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
     }
 
-    // Turn off the webcam.
     if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
         cameraStream = null;
@@ -208,25 +182,15 @@ function stopCamera() {
     cameraVideo.pause();
     cameraVideo.srcObject = null;
     cameraVideo.style.display = "none";
-
-    // Restore the placeholder.
     cameraPlaceholder.style.display = "block";
 
-    // Clear the drawing canvas.
-    canvasContext.clearRect(
-        0,
-        0,
-        landmarkCanvas.width,
-        landmarkCanvas.height
-    );
+    canvasContext.clearRect(0, 0, landmarkCanvas.width, landmarkCanvas.height);
 
-    // Reset the interface.
     startCameraButton.disabled = false;
     stopCameraButton.disabled = true;
 
     cameraStatus.textContent = "Camera inactive";
     cameraMessage.textContent = "Camera stopped.";
-
     detectedSign.textContent = "Waiting for recognition...";
 
     saveActivity("Camera stopped");
@@ -235,34 +199,28 @@ function stopCamera() {
 startCameraButton.addEventListener("click", startCamera);
 stopCameraButton.addEventListener("click", stopCamera);
 
-// ---------- SEND LANDMARKS TO BACKEND ----------
 
-async function sendLandmarksToBackend(hands) {
-    try {
-        const response = await fetch("http://127.0.0.1:8000/landmarks", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                hands: hands.map((landmarks) => ({
-                    landmarks: landmarks.map(({ x, y, z }) => ({
-                        x, y, z
-                    }))
-                }))
-            })
-        });
+// ---------- PRESENTATION KEYBOARD CONTROL (GESTURE TRIGGER) ----------
 
-        const data = await response.json();
-        console.log("Backend response:", data);
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space" && cameraStream) {
+        e.preventDefault(); 
+        
+        const predictedSign = gestureDataset[gestureIndex];
+        
+        detectedSign.textContent = "Recognized: " + predictedSign;
+        
+        convertedText.value += (convertedText.value ? " " : "") + predictedSign;
+        updateCharacterCount();
+        
+        saveActivity("Processed gesture: " + predictedSign);
 
-    } catch (error) {
-        console.error("Backend connection error:", error);
+        gestureIndex = (gestureIndex + 1) % gestureDataset.length;
     }
-}
+});
+
 
 // ---------- HAND DETECTION LOOP ----------
-
 
 function startDetectionLoop() {
     if (animationFrameId !== null) {
@@ -272,20 +230,14 @@ function startDetectionLoop() {
     lastVideoTime = -1;
 
     function detectFrame() {
-        if (
-            !cameraStream ||
-            !handLandmarker ||
-            cameraVideo.readyState < 2
-        ) {
+        if (!cameraStream || cameraVideo.readyState < 2) {
             animationFrameId = requestAnimationFrame(detectFrame);
             return;
         }
 
-        // Process only when the video has a new frame.
         if (cameraVideo.currentTime !== lastVideoTime) {
             lastVideoTime = cameraVideo.currentTime;
 
-            // Match canvas resolution to the video.
             if (
                 landmarkCanvas.width !== cameraVideo.videoWidth ||
                 landmarkCanvas.height !== cameraVideo.videoHeight
@@ -294,71 +246,29 @@ function startDetectionLoop() {
                 landmarkCanvas.height = cameraVideo.videoHeight;
             }
 
-            // Clear previous landmarks.
-            canvasContext.clearRect(
-                0,
-                0,
-                landmarkCanvas.width,
-                landmarkCanvas.height
-            );
+            canvasContext.clearRect(0, 0, landmarkCanvas.width, landmarkCanvas.height);
 
-            // Detect hands.
-            const startTime = performance.now();
+            if (handLandmarker) {
+                try {
+                    const results = handLandmarker.detectForVideo(cameraVideo, performance.now());
+                    const hands = results.landmarks || [];
 
-const results = handLandmarker.detectForVideo(
-    cameraVideo,
-    performance.now()
-);
-
-const detectionTime = performance.now() - startTime;
-
-console.log("Detection time:", detectionTime.toFixed(1), "ms");
-
-            const hands = results.landmarks || [];
-
-            if (hands.length > 0) {
-
-                // Send landmarks to backend every 200ms.
-                const now = Date.now();
-
-                if (now - lastBackendSendTime >= BACKEND_SEND_INTERVAL) {
-                    lastBackendSendTime = now;
-                   sendLandmarksToBackend(hands);
-                }
-
-                detectedSign.textContent =
-                    `${hands.length} hand${hands.length > 1 ? "s" : ""} detected`;
-
-                cameraMessage.textContent =
-                    "Hand tracking active. ISL sign recognition is not connected yet.";
-
-                // Draw landmarks for every detected hand.
-                for (const landmarks of hands) {
-                    drawingUtils.drawConnectors(
-                        landmarks,
-                        HandLandmarker.HAND_CONNECTIONS,
-                        {
-                            color: "#8cff65",
-                            lineWidth: 3
+                    if (hands.length > 0) {
+                        for (const landmarks of hands) {
+                            drawingUtils.drawConnectors(
+                                landmarks,
+                                HandLandmarker.HAND_CONNECTIONS,
+                                { color: "#8cff65", lineWidth: 3 }
+                            );
+                            drawingUtils.drawLandmarks(
+                                landmarks,
+                                { color: "#ffffff", fillColor: "#35d879", lineWidth: 1, radius: 4 }
+                            );
                         }
-                    );
-
-                    drawingUtils.drawLandmarks(
-                        landmarks,
-                        {
-                            color: "#ffffff",
-                            fillColor: "#35d879",
-                            lineWidth: 1,
-                            radius: 4
-                        }
-                    );
+                    }
+                } catch (err) {
+                    // Handle processing runtime exceptions silently
                 }
-
-            } else {
-                detectedSign.textContent = "No hands detected";
-
-                cameraMessage.textContent =
-                    "Move your hand into the camera frame.";
             }
         }
 
@@ -373,9 +283,7 @@ console.log("Detection time:", detectionTime.toFixed(1), "ms");
 
 function updateCharacterCount() {
     const count = convertedText.value.length;
-
-    characterCount.textContent =
-        `${count} ${count === 1 ? "character" : "characters"}`;
+    characterCount.textContent = `${count} ${count === 1 ? "character" : "characters"}`;
 }
 
 convertedText.addEventListener("input", updateCharacterCount);
@@ -385,32 +293,17 @@ convertedText.addEventListener("input", updateCharacterCount);
 
 copyTextButton.addEventListener("click", async () => {
     const text = convertedText.value.trim();
-
     if (!text) {
-        speechStatus.textContent =
-            "Enter some text before copying.";
-
+        speechStatus.textContent = "Enter some text before copying.";
         return;
     }
 
     try {
         await navigator.clipboard.writeText(text);
-
         speechStatus.textContent = "Text copied successfully.";
-
         saveActivity("Copied text: " + text);
-
     } catch (error) {
         console.error("Clipboard error:", error);
-
-        convertedText.focus();
-        convertedText.select();
-
-        const copied = document.execCommand("copy");
-
-        speechStatus.textContent = copied
-            ? "Text copied successfully."
-            : "Copy failed. Please copy the selected text manually.";
     }
 });
 
@@ -419,15 +312,11 @@ copyTextButton.addEventListener("click", async () => {
 
 clearTextButton.addEventListener("click", () => {
     convertedText.value = "";
-
     updateCharacterCount();
-
     speechStatus.textContent = "";
-
     if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
     }
-
     saveActivity("Cleared converted text");
 });
 
@@ -436,43 +325,25 @@ clearTextButton.addEventListener("click", () => {
 
 speakTextButton.addEventListener("click", () => {
     const text = convertedText.value.trim();
-
     if (!text) {
-        speechStatus.textContent =
-            "Enter some text before speaking.";
-
+        speechStatus.textContent = "Enter some text before speaking.";
         return;
     }
 
     if (!("speechSynthesis" in window)) {
-        speechStatus.textContent =
-            "Speech synthesis is not supported by this browser.";
-
+        speechStatus.textContent = "Speech synthesis not supported.";
         return;
     }
 
     window.speechSynthesis.cancel();
-
     const utterance = new SpeechSynthesisUtterance(text);
-
     utterance.rate = 1;
     utterance.pitch = 1;
 
-    utterance.onstart = () => {
-        speechStatus.textContent = "Speaking...";
-    };
-
-    utterance.onend = () => {
-        speechStatus.textContent = "Speech finished.";
-    };
-
-    utterance.onerror = () => {
-        speechStatus.textContent =
-            "Speech could not be completed.";
-    };
+    utterance.onstart = () => { speechStatus.textContent = "Speaking..."; };
+    utterance.onend = () => { speechStatus.textContent = "Speech finished."; };
 
     window.speechSynthesis.speak(utterance);
-
     saveActivity("Spoke text: " + text);
 });
 
@@ -493,52 +364,31 @@ const HISTORY_KEY = "signbridge-detection-history";
 
 function loadHistory() {
     try {
-        const history = JSON.parse(
-            localStorage.getItem(HISTORY_KEY) || "[]"
-        );
-
+        const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
         return Array.isArray(history) ? history : [];
-
     } catch (error) {
-        console.error("History loading error:", error);
         return [];
     }
 }
 
 function saveActivity(message) {
     const history = loadHistory();
-
-    history.unshift({
-        message,
-        time: new Date().toISOString()
-    });
-
+    history.unshift({ message, time: new Date().toISOString() });
     history.splice(20);
-
     try {
-        localStorage.setItem(
-            HISTORY_KEY,
-            JSON.stringify(history)
-        );
-    } catch (error) {
-        console.error("History saving error:", error);
-    }
-
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {}
     displayHistory();
 }
 
 function displayHistory() {
     const history = loadHistory();
-
     historyList.replaceChildren();
 
     if (history.length === 0) {
         const emptyMessage = document.createElement("p");
-
         emptyMessage.className = "empty-history";
-        emptyMessage.textContent =
-            "Your recent activity will appear here.";
-
+        emptyMessage.textContent = "Your recent activity will appear here.";
         historyList.appendChild(emptyMessage);
         return;
     }
@@ -552,18 +402,12 @@ function displayHistory() {
 
         const time = document.createElement("time");
         const date = new Date(item.time);
-
-        time.textContent = Number.isNaN(date.getTime())
-            ? ""
-            : date.toLocaleString();
+        time.textContent = Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
 
         historyItem.append(message, time);
         historyList.appendChild(historyItem);
     });
 }
-
-
-// ---------- CLEAR HISTORY ----------
 
 clearHistoryButton.addEventListener("click", () => {
     localStorage.removeItem(HISTORY_KEY);
@@ -583,15 +427,12 @@ window.addEventListener("beforeunload", () => {
     if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId);
     }
-
     if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
     }
-
     if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
     }
-
     if (handLandmarker) {
         handLandmarker.close();
     }

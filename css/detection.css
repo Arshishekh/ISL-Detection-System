@@ -1,6 +1,6 @@
 /* =========================================
    SIGNBRIDGE — ISL DETECTION PAGE
-   Theme: Dark Emerald + Neon Green
+   Theme: Dark Emerald + Neon Green + Snowfall FX
 ========================================= */
 
 :root {
@@ -28,7 +28,7 @@
 
 /* ---------- RESET ---------- */
 
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -43,12 +43,12 @@ body {
     background:
         radial-gradient(
             ellipse at 15% 0%,
-            rgba(29, 104, 63, 0.16),
+            rgba(29, 104, 63, 0.22),
             transparent 38%
         ),
         radial-gradient(
             ellipse at 95% 65%,
-            rgba(23, 99, 60, 0.10),
+            rgba(23, 99, 60, 0.15),
             transparent 35%
         ),
         var(--bg-primary);
@@ -56,6 +56,43 @@ body {
     color: var(--text-primary);
     font-family: Inter, "Segoe UI", Arial, sans-serif;
     line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ---------- CSS-ONLY SNOW / PARTICLE EFFECT ---------- */
+body::before {
+    content: "";
+    position: fixed;
+    top: -10vh;
+    left: 0;
+    width: 100vw;
+    height: 120vh;
+    pointer-events: none;
+    z-index: 0;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(140, 255, 101, 0.7), rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, rgba(53, 216, 121, 0.5), rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 90px 40px, rgba(140, 255, 101, 0.6), rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, rgba(255, 255, 255, 0.4), rgba(0,0,0,0)),
+        radial-gradient(2.5px 2.5px at 230px 80px, rgba(53, 216, 121, 0.6), rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 310px 150px, rgba(140, 255, 101, 0.5), rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 380px 200px, rgba(255, 255, 255, 0.3), rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    animation: snowfall 18s linear infinite;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+    50% {
+        transform: translateY(50vh) translateX(15px);
+    }
+    100% {
+        transform: translateY(100vh) translateX(-10px);
+    }
 }
 
 button,
@@ -89,7 +126,8 @@ textarea:focus-visible {
 .detection-page {
     width: 100%;
     min-height: 100vh;
-    overflow: hidden;
+    position: relative;
+    z-index: 1;
 }
 
 /* ---------- HEADER ---------- */
@@ -103,8 +141,8 @@ textarea:focus-visible {
     padding: 20px 6%;
     border-bottom: 1px solid var(--border-color);
 
-    background: rgba(6, 16, 13, 0.76);
-    backdrop-filter: blur(18px);
+    background: rgba(6, 16, 13, 0.85);
+    backdrop-filter: blur(20px);
 
     position: sticky;
     top: 0;
@@ -135,6 +173,7 @@ textarea:focus-visible {
     color: var(--green-primary);
 
     font-size: 1.35rem;
+    box-shadow: 0 0 15px rgba(140, 255, 101, 0.2);
 }
 
 .back-button {
@@ -181,6 +220,7 @@ textarea:focus-visible {
     font-size: 0.75rem;
     font-weight: 750;
     letter-spacing: 2.5px;
+    text-shadow: 0 0 10px rgba(140, 255, 101, 0.3);
 }
 
 .page-heading h1 {
@@ -193,6 +233,7 @@ textarea:focus-visible {
 
 .page-heading h1 span {
     color: var(--green-primary);
+    text-shadow: 0 0 20px rgba(140, 255, 101, 0.25);
 }
 
 .subtitle {
@@ -222,11 +263,17 @@ textarea:focus-visible {
 
     background: linear-gradient(
         145deg,
-        rgba(16, 37, 27, 0.94),
+        rgba(16, 37, 27, 0.92),
         rgba(8, 22, 16, 0.96)
     );
 
     box-shadow: var(--shadow-green);
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s ease;
+}
+
+.panel:hover {
+    border-color: rgba(140, 255, 101, 0.25);
 }
 
 .panel-heading {
@@ -279,14 +326,20 @@ textarea:focus-visible {
     border-radius: 50%;
     background: var(--green-primary);
 
-    box-shadow: 0 0 10px rgba(140, 255, 101, 0.45);
+    box-shadow: 0 0 10px rgba(140, 255, 101, 0.8);
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(140, 255, 101, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(140, 255, 101, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(140, 255, 101, 0); }
 }
 
 .ai-badge {
     color: var(--green-primary);
     border-color: var(--border-highlight);
     background: rgba(140, 255, 101, 0.06);
-
     letter-spacing: 0.7px;
 }
 
@@ -303,7 +356,7 @@ textarea:focus-visible {
 
     overflow: hidden;
 
-    border: 1px solid rgba(108, 207, 139, 0.2);
+    border: 1px solid rgba(108, 207, 139, 0.25);
     border-radius: var(--radius-medium);
 
     background:
@@ -313,6 +366,7 @@ textarea:focus-visible {
             transparent 65%
         ),
         #030a07;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
 }
 
 #cameraVideo {
@@ -363,7 +417,7 @@ textarea:focus-visible {
     background: rgba(140, 255, 101, 0.07);
 
     font-size: 2.5rem;
-    box-shadow: 0 0 35px rgba(53, 216, 121, 0.08);
+    box-shadow: 0 0 35px rgba(53, 216, 121, 0.15);
 }
 
 .camera-placeholder h3 {
@@ -395,7 +449,9 @@ textarea:focus-visible {
 .camera-overlay span {
     padding: 5px 8px;
     border-radius: 6px;
-    background: rgba(0, 0, 0, 0.48);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 /* ---------- BUTTONS ---------- */
@@ -438,12 +494,12 @@ textarea:focus-visible {
 .primary-button {
     color: #06140a;
     background: var(--green-primary);
-    box-shadow: 0 4px 20px rgba(140, 255, 101, 0.10);
+    box-shadow: 0 4px 20px rgba(140, 255, 101, 0.25);
 }
 
 .primary-button:hover:not(:disabled) {
     background: #a5ff87;
-    box-shadow: 0 5px 25px rgba(140, 255, 101, 0.19);
+    box-shadow: 0 5px 25px rgba(140, 255, 101, 0.4);
     transform: translateY(-2px);
 }
 
@@ -476,10 +532,10 @@ textarea:focus-visible {
     background:
         radial-gradient(
             ellipse at top left,
-            rgba(53, 216, 121, 0.07),
+            rgba(53, 216, 121, 0.09),
             transparent 70%
         ),
-        rgba(2, 12, 7, 0.38);
+        rgba(2, 12, 7, 0.5);
 }
 
 .field-label,
@@ -497,6 +553,7 @@ textarea:focus-visible {
     font-size: clamp(1.25rem, 2vw, 1.7rem);
     font-weight: 700;
     overflow-wrap: anywhere;
+    text-shadow: 0 0 15px rgba(140, 255, 101, 0.2);
 }
 
 .recognition-note {
@@ -537,12 +594,12 @@ textarea:focus-visible {
     border-radius: 12px;
 
     color: var(--text-primary);
-    background: rgba(2, 10, 6, 0.56);
+    background: rgba(2, 10, 6, 0.65);
 
     font-size: 0.9rem;
     line-height: 1.7;
 
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 #convertedText::placeholder {
@@ -551,6 +608,7 @@ textarea:focus-visible {
 
 #convertedText:focus {
     border-color: var(--border-highlight);
+    box-shadow: 0 0 15px rgba(140, 255, 101, 0.15);
     outline: none;
 }
 
@@ -644,6 +702,11 @@ textarea:focus-visible {
     border-radius: 11px;
 
     background: rgba(255, 255, 255, 0.018);
+    transition: background 0.2s ease;
+}
+
+.history-item:hover {
+    background: rgba(140, 255, 101, 0.03);
 }
 
 .history-item p {
@@ -667,6 +730,7 @@ textarea:focus-visible {
     color: var(--text-muted);
     font-size: 0.8rem;
     text-align: center;
+    background: rgba(3, 8, 6, 0.6);
 }
 
 /* ---------- RESPONSIVE DESIGN ---------- */
@@ -758,5 +822,8 @@ textarea:focus-visible {
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
+    }
+    body::before {
+        display: none;
     }
 }
